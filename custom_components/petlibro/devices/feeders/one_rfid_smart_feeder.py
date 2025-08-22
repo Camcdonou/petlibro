@@ -165,6 +165,11 @@ class OneRFIDSmartFeeder(Device):
         return self._data.get("realInfo", {}).get("enableLight", False)
 
     @property
+    def light_switch(self) -> bool:
+        """Check if the light is enabled."""
+        return bool(self._data.get("realInfo", {}).get("lightSwitch", False))
+
+    @property
     def vacuum_state(self) -> bool:
         return self._data.get("realInfo", {}).get("vacuumState", False)
 
@@ -214,7 +219,7 @@ class OneRFIDSmartFeeder(Device):
         """Return the recordTime of the last successful grain output as a formatted string."""
         _LOGGER.debug("last_feed_time called for device: %s", self.serial)
         raw = self._data.get("workRecord", [])
-
+        
         # Log raw to help debug
         _LOGGER.debug("Raw workRecord (from self._data): %s", raw)
 
