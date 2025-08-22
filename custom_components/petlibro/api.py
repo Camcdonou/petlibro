@@ -430,7 +430,7 @@ class PetLibroAPI:
         """Enable or disable the child lock functionality."""
         try:
             response = await self.session.post(
-                "/device/setting/updateChildLockSwitch", 
+                "/device/setting/updateChildLockSwitch",
                 json={"deviceSn": serial, "enable": enable}
             )
 
@@ -736,7 +736,7 @@ class PetLibroAPI:
                 "deviceSn": serial,
                 # The plate ID doesn't matter here - the device will always feed from the current bowl regardless of what the plate ID is.
                 # The app also always uses 1 for the plate ID.
-                "plate": 1 
+                "plate": 1
             })
 
         except aiohttp.ClientError as err:
@@ -794,7 +794,7 @@ class PetLibroAPI:
     async def set_desiccant_reset(self, serial: str) -> JSON:
         """Trigger desiccant reset for a specific device."""
         _LOGGER.debug(f"Triggering desiccant reset for device with serial: {serial}")
-        
+
         try:
             # Generate a dynamic request ID for the desiccant reset
             request_id = str(uuid.uuid4()).replace("-", "")
@@ -806,15 +806,20 @@ class PetLibroAPI:
                 "timeout": 5000
             })
 
+            # Granary smart feeder quirk: response can be None on success
+            if response is None:
+                _LOGGER.debug("Desiccant reset set successfully, got no extra data")
+                return
+
             # Check if response is already parsed (since response is an integer here)
             if isinstance(response, int):
                 _LOGGER.debug(f"Desiccant reset set successfully, returned code: {response}")
                 return response
-            
+
             # If response is a dictionary (JSON), handle it
             response_data = await response.json()
             _LOGGER.debug(f"Desiccant reset response data: {response_data}")
-            
+
             # Check if the response indicates success
             if response.status != 200 or response_data.get("code") != 0:
                 raise PetLibroAPIError(f"Failed to trigger desiccant reset: {response_data.get('msg')}")
@@ -958,4 +963,4 @@ class PetLibroDataCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         # Fetch data from the API once per update cycle
-        return await self.api.fetch_device_data()        
+        return await self.api.fetch_device_data()
