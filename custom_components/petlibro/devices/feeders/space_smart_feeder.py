@@ -5,6 +5,7 @@ from logging import getLogger
 from ...exceptions import PetLibroAPIError
 from ..device import Device
 from datetime import datetime
+from homeassistant.util import dt as dt_util
 
 _LOGGER = getLogger(__name__)
 
@@ -34,6 +35,8 @@ class SpaceSmartFeeder(Device):  # Inherit directly from Device
                 "getAttributeSetting": attribute_settings or {},
                 "getfeedingplantoday": get_feeding_plan_today or {},
                 "getDeviceEvents": get_device_events or {},
+                "getUpgrade": get_upgrade or {},
+                "getfeedingplantoday": get_feeding_plan_today or {},
                 "getUpgrade": get_upgrade or {}
             })
         except PetLibroAPIError as err:
@@ -191,36 +194,46 @@ class SpaceSmartFeeder(Device):  # Inherit directly from Device
     def food_dispenser_state(self) -> bool:
         events = self._data.get("getDeviceEvents", {}).get("data", {}).get("eventInfos", [])
         return any(event.get("eventKey") == "GRAIN_OUTLET_BLOCKED_OVERTIME" for event in events)
-
+ 
     @property
     def food_outlet_state(self) -> bool:
         events = self._data.get("getDeviceEvents", {}).get("data", {}).get("eventInfos", [])
         return any(event.get("eventKey") == "FOOD_OUTLET_DOOR_FAILED_CLOSE" for event in events)
-
+      
     @property
-    def last_feed_time(self) -> str | None:
-        """Return the recordTime of the last successful grain output as a formatted string."""
+    def last_feed_time(self) -> datetime | None:
+        """Return the recordTime of the last successful grain output as a datetime object (UTC)."""
         _LOGGER.debug("last_feed_time called for device: %s", self.serial)
         raw = self._data.get("workRecord", [])
 
-        # Log raw to help debug
-        _LOGGER.debug("Raw workRecord (from self._data): %s", raw)
-
         if not raw or not isinstance(raw, list):
             return None
-
+        
         for day_entry in raw:
             work_records = day_entry.get("workRecords", [])
             for record in work_records:
-                _LOGGER.debug("Evaluating record type: %s", record.get("type"))
                 if record.get("type") == "GRAIN_OUTPUT_SUCCESS":
                     timestamp_ms = record.get("recordTime", 0)
                     if timestamp_ms:
-                        dt = datetime.fromtimestamp(timestamp_ms / 1000)
-                        _LOGGER.debug("Returning formatted time: %s", dt.strftime("%Y-%m-%d %H:%M:%S"))
-                        return dt.strftime("%Y-%m-%d %H:%M:%S")
-
+                        # HA utility: always return UTC datetime
+                        dt = dt_util.utc_from_timestamp(timestamp_ms / 1000)
+                        _LOGGER.debug("Returning datetime object: %s", dt.isoformat())
+                        return dt
         return None
+
+    @property
+    def last_feed_quantity(self) -> int | None:
+        """Return the last feed amount in raw grain count."""
+        raw = self._data.get("workRecord", [])
+        if not raw or not isinstance(raw, list):
+            return 0
+
+        for day_entry in raw:
+            for record in day_entry.get("workRecords", []):
+                _LOGGER.debug("Evaluating record type: %s", record.get("type"))
+                if record.get("type") == "GRAIN_OUTPUT_SUCCESS":
+                    return record.get("actualGrainNum") or 0
+        return 0
 
     @property
     def feeding_plan_today_data(self) -> str:

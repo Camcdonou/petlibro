@@ -5,6 +5,7 @@ from logging import getLogger
 from ...exceptions import PetLibroAPIError
 from ..device import Device
 from datetime import datetime
+from homeassistant.util import dt as dt_util
 
 _LOGGER = getLogger(__name__)
 
@@ -176,6 +177,7 @@ class AirSmartFeeder(Device):  # Inherit directly from Device
     def screen_display_switch(self) -> bool:
         return bool(self._data.get("realInfo", {}).get("screenDisplaySwitch", False))
 
+    @property
     def remaining_desiccant(self) -> float | None:
         """Get the remaining desiccant days."""
         value = self._data.get("remainingDesiccantDays")
@@ -185,13 +187,10 @@ class AirSmartFeeder(Device):  # Inherit directly from Device
             return None
 
     @property
-    def last_feed_time(self) -> str | None:
-        """Return the recordTime of the last successful grain output as a formatted string."""
+    def last_feed_time(self) -> datetime | None:
+        """Return the recordTime of the last successful grain output as a datetime object (UTC)."""
         _LOGGER.debug("last_feed_time called for device: %s", self.serial)
         raw = self._data.get("workRecord", [])
-
-        # Log raw to help debug
-        _LOGGER.debug("Raw workRecord (from self._data): %s", raw)
 
         if not raw or not isinstance(raw, list):
             return None
@@ -199,13 +198,13 @@ class AirSmartFeeder(Device):  # Inherit directly from Device
         for day_entry in raw:
             work_records = day_entry.get("workRecords", [])
             for record in work_records:
-                _LOGGER.debug("Evaluating record type: %s", record.get("type"))
                 if record.get("type") == "GRAIN_OUTPUT_SUCCESS":
                     timestamp_ms = record.get("recordTime", 0)
                     if timestamp_ms:
-                        dt = datetime.fromtimestamp(timestamp_ms / 1000)
-                        _LOGGER.debug("Returning formatted time: %s", dt.strftime("%Y-%m-%d %H:%M:%S"))
-                        return dt.strftime("%Y-%m-%d %H:%M:%S")
+                        # HA utility: always return UTC datetime
+                        dt = dt_util.utc_from_timestamp(timestamp_ms / 1000)
+                        _LOGGER.debug("Returning datetime object: %s", dt.isoformat())
+                        return dt
         return None
 
     @property
@@ -302,6 +301,7 @@ class AirSmartFeeder(Device):  # Inherit directly from Device
             _LOGGER.error(f"Failed to trigger manual feed for {self.serial}: {err}")
             raise PetLibroAPIError(f"Error triggering manual feed: {err}")
             
+    # Method for indicator turn on
     async def set_light_on(self) -> None:
         _LOGGER.debug(f"Turning on the indicator for {self.serial}")
         try:

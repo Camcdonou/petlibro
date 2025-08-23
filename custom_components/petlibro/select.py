@@ -17,6 +17,7 @@ from homeassistant.components.select import (
     SelectEntityDescription,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.core import callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry  # Added ConfigEntry import
 from .hub import PetLibroHub  # Adjust the import path as necessary
@@ -83,11 +84,16 @@ class PetLibroSelectEntity(PetLibroEntity[_DeviceT], SelectEntity):
         return str(state)
 
     async def async_select_option(self, current_selection: str) -> None:
-        """Set the current_option of the select."""
         _LOGGER.debug(f"Setting current option {current_selection} for {self.device.name}")
         try:
             _LOGGER.debug(f"Calling method with current option={current_selection} for {self.device.name}")
             await self.entity_description.method(self.device, current_selection)
+
+            # Immediately reflect the user's choice if it's a valid option
+            if current_selection in self.options:
+                self._attr_current_option = current_selection
+                self.async_write_ha_state()
+
             _LOGGER.debug(f"Current option {current_selection} set successfully for {self.device.name}")
         except Exception as e:
             _LOGGER.error(f"Error setting current option {current_selection} for {self.device.name}: {e}")
@@ -113,7 +119,7 @@ class PetLibroSelectEntity(PetLibroEntity[_DeviceT], SelectEntity):
             },
             "water_dispensing_mode": {
                 "Flowing Water (Constant)": 0,
-                "Intermittent Water (Scheduled)": 1,
+                "Intermittent Water (Scheduled)": 1
             },
             "vacuum_mode": {
                 "Study": "LEARNING",

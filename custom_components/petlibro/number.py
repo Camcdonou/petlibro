@@ -246,7 +246,7 @@ DEVICE_NUMBER_MAP: dict[type[Device], list[PetLibroNumberEntityDescription]] = {
             native_step=1,
             value=lambda device: device.cleaning_cycle,
             method=lambda device, value: device.set_cleaning_cycle(value),
-            name="Machine Cleaning Cycle"
+            name="Cleaning Cycle"
         ),
         PetLibroNumberEntityDescription[DockstreamSmartFountain](
             key="filter_cycle",
@@ -298,7 +298,7 @@ DEVICE_NUMBER_MAP: dict[type[Device], list[PetLibroNumberEntityDescription]] = {
             native_step=1,
             value=lambda device: device.cleaning_cycle,
             method=lambda device, value: device.set_cleaning_cycle(value),
-            name="Machine Cleaning Cycle"
+            name="Cleaning Cycle"
         ),
         PetLibroNumberEntityDescription[DockstreamSmartRFIDFountain](
             key="filter_cycle",

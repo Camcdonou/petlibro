@@ -301,7 +301,7 @@ class PolarWetFoodFeeder(Device):
         except aiohttp.ClientError as err:
             _LOGGER.error(f"Failed to turn off the indicator for {self.serial}: {err}")
             raise PetLibroAPIError(f"Error turning off the indicator: {err}")
-        
+
     @property
     def update_available(self) -> bool:
         """Return True if an update is available, False otherwise."""
