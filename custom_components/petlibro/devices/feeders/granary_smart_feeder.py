@@ -98,7 +98,7 @@ class GranarySmartFeeder(Device):  # Inherit directly from Device
 
     @property
     def whether_in_sleep_mode(self) -> bool:
-        return bool(self._data.get("realInfo", {}).get("whetherInSleepMode", False))
+        return bool(self._data.get("getAttributeSetting", {}).get("enableSleepMode", False))
 
     @property
     def enable_low_battery_notice(self) -> bool:
@@ -184,7 +184,7 @@ class GranarySmartFeeder(Device):  # Inherit directly from Device
             return float(value) if value is not None else None
         except (TypeError, ValueError):
             return None
-    
+
     @property
     def last_feed_time(self) -> str | None:
         """Return the recordTime of the last successful grain output as a formatted string."""
