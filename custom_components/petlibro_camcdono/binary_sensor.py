@@ -35,6 +35,7 @@ from .devices.fountains.dockstream_smart_fountain import DockstreamSmartFountain
 from .devices.fountains.dockstream_smart_rfid_fountain import DockstreamSmartRFIDFountain
 from .devices.fountains.dockstream_2_smart_cordless_fountain import Dockstream2SmartCordlessFountain
 from .devices.fountains.dockstream_2_smart_fountain import Dockstream2SmartFountain
+from .devices.litterboxes.luma_smart_litter_box import LumaSmartLitterBox
 from .entity import PetLibroEntity, _DeviceT, PetLibroEntityDescription
 
 
@@ -522,6 +523,67 @@ DEVICE_BINARY_SENSOR_MAP: dict[type[Device], list[PetLibroBinarySensorEntityDesc
             device_class=BinarySensorDeviceClass.MOISTURE,
             should_report=lambda device: device.water_state is not None,
             name="Water Dispensing State"
+        ),
+    ],
+    LumaSmartLitterBox: [
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="online",
+            translation_key="wifi",
+            icon="mdi:wifi",
+            device_class=BinarySensorDeviceClass.CONNECTIVITY,
+            name="Wi-Fi"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="rubbish_full_state",
+            translation_key="rubbish_full_state",
+            icon="mdi:delete-alert",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="Waste Bin Full"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="rubbish_inplace_state",
+            translation_key="rubbish_inplace_state",
+            icon="mdi:delete",
+            device_class=BinarySensorDeviceClass.PRESENCE,
+            name="Waste Bin Installed"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="vacuum_state",
+            translation_key="vacuum_state",
+            icon="mdi:vacuum",
+            name="Vacuum Active"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="deodorization_state_on",
+            translation_key="deodorization_state_on",
+            icon="mdi:air-purifier",
+            device_class=BinarySensorDeviceClass.RUNNING,
+            name="Deodorization Running"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="camera_switch",
+            translation_key="camera_switch",
+            icon="mdi:camera",
+            name="Camera Enabled"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="enable_sound",
+            translation_key="enable_sound",
+            icon="mdi:volume-high",
+            name="Sound Enabled"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="enable_light",
+            translation_key="enable_light",
+            icon="mdi:lightbulb",
+            name="Light Enabled"
+        ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="device_stopped_working",
+            translation_key="device_stopped_working",
+            icon="mdi:alert-circle",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="Device Error"
         ),
     ]
 }
