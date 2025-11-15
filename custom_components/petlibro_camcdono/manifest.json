@@ -1,5 +1,5 @@
 {
-  "domain": "petlibro",
+  "domain": "petlibro_camcdono",
   "name": "PETLIBRO_Camcdono",
   "codeowners": [
     "@jjjonesjr33"
@@ -9,6 +9,6 @@
   "integration_type": "hub",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/jjjonesjr33/petlibro/issues",
-  "loggers": ["petlibro"],
-  "version": "1.2.30.6"
+  "loggers": ["petlibro_camcdono"],
+  "version": "1.2.30.7"
 }
