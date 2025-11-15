@@ -124,6 +124,11 @@ class LumaSmartLitterBox(Device):
         return self._data.get("doorState", "CLOSE")
 
     @property
+    def cat_using(self) -> bool:
+        """Check if a cat is currently using the litter box (door is open)."""
+        return self.door_state == "OPEN"
+
+    @property
     def vacuum_state(self) -> bool:
         """Get the vacuum state."""
         return bool(self._data.get("vacuumState", False))

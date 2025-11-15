@@ -71,6 +71,12 @@ class PetLibroSession:
         joined_url = urljoin(self.base_url, url)
         _LOGGER.debug(f"Making {method} request to {joined_url}")
 
+        # Log request body for debugging
+        if "json" in kwargs:
+            _LOGGER.debug(f"Request body (json): {kwargs['json']}")
+        if "data" in kwargs:
+            _LOGGER.debug(f"Request body (data): {kwargs['data']}")
+
         if "headers" not in kwargs:
             kwargs["headers"] = {}
 

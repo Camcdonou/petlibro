@@ -585,6 +585,13 @@ DEVICE_BINARY_SENSOR_MAP: dict[type[Device], list[PetLibroBinarySensorEntityDesc
             device_class=BinarySensorDeviceClass.PROBLEM,
             name="Device Error"
         ),
+        PetLibroBinarySensorEntityDescription[LumaSmartLitterBox](
+            key="cat_using",
+            translation_key="cat_using",
+            icon="mdi:cat",
+            device_class=BinarySensorDeviceClass.OCCUPANCY,
+            name="Cat Using Litter Box"
+        ),
     ]
 }
 
