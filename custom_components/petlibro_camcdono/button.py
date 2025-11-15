@@ -31,6 +31,7 @@ from .devices.fountains.dockstream_smart_fountain import DockstreamSmartFountain
 from .devices.fountains.dockstream_smart_rfid_fountain import DockstreamSmartRFIDFountain
 from .devices.fountains.dockstream_2_smart_cordless_fountain import Dockstream2SmartCordlessFountain
 from .devices.fountains.dockstream_2_smart_fountain import Dockstream2SmartFountain
+from .devices.litterboxes.luma_smart_litter_box import LumaSmartLitterBox
 
 @dataclass(frozen=True)
 class RequiredKeysMixin(Generic[_DeviceT]):
@@ -397,6 +398,44 @@ DEVICE_BUTTON_MAP: dict[type[Device], list[PetLibroButtonEntityDescription]] = {
             set_fn=lambda device: device.set_filter_reset(),
             name="Filter Reset"
         )
+    ],
+    LumaSmartLitterBox: [
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="filter_reset",
+            translation_key="filter_reset",
+            set_fn=lambda device: device.set_filter_reset(),
+            name="Filter Reset"
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="cleaning_reset",
+            translation_key="cleaning_reset",
+            set_fn=lambda device: device.set_cleaning_reset(),
+            name="Cleaning Reset"
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="light_on",
+            translation_key="light_on",
+            set_fn=lambda device: device.set_light_on(),
+            name="Turn On Light"
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="light_off",
+            translation_key="light_off",
+            set_fn=lambda device: device.set_light_off(),
+            name="Turn Off Light"
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="sound_on",
+            translation_key="sound_on",
+            set_fn=lambda device: device.set_sound_on(),
+            name="Turn On Sound"
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="sound_off",
+            translation_key="sound_off",
+            set_fn=lambda device: device.set_sound_off(),
+            name="Turn Off Sound"
+        ),
     ],
 }
 

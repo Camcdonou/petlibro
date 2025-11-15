@@ -232,3 +232,34 @@ class LumaSmartLitterBox(Device):
     def latest_firmware_version(self) -> str:
         """Get the latest firmware version available."""
         return self._data.get("getUpgrade", {}).get("latestVersion", "unknown")
+
+    # Button/Control Methods
+    async def set_filter_reset(self):
+        """Reset the filter replacement counter."""
+        await self.api.set_filter_reset(self.serial)
+        await self.refresh()
+
+    async def set_cleaning_reset(self):
+        """Reset the cleaning reminder counter."""
+        await self.api.set_cleaning_reset(self.serial)
+        await self.refresh()
+
+    async def set_light_on(self):
+        """Turn on the indicator light."""
+        await self.api.set_light_enable(self.serial, True)
+        await self.refresh()
+
+    async def set_light_off(self):
+        """Turn off the indicator light."""
+        await self.api.set_light_enable(self.serial, False)
+        await self.refresh()
+
+    async def set_sound_on(self):
+        """Turn on sound."""
+        await self.api.set_sound_enable(self.serial, True)
+        await self.refresh()
+
+    async def set_sound_off(self):
+        """Turn off sound."""
+        await self.api.set_sound_enable(self.serial, False)
+        await self.refresh()
