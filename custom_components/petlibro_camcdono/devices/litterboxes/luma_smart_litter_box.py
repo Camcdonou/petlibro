@@ -268,3 +268,24 @@ class LumaSmartLitterBox(Device):
         """Turn off sound."""
         await self.api.set_sound_enable(self.serial, False)
         await self.refresh()
+
+    # Experimental Controls
+    async def set_clean_now(self):
+        """Trigger cleaning cycle (EXPERIMENTAL)."""
+        await self.api.set_litter_box_clean(self.serial)
+        await self.refresh()
+
+    async def set_level_litter(self):
+        """Level/redistribute litter (EXPERIMENTAL)."""
+        await self.api.set_litter_box_level(self.serial)
+        await self.refresh()
+
+    async def set_empty_all(self):
+        """Empty all/full dump (EXPERIMENTAL)."""
+        await self.api.set_litter_box_empty_all(self.serial)
+        await self.refresh()
+
+    async def set_air_purify(self):
+        """Start air purification/deodorization (EXPERIMENTAL)."""
+        await self.api.set_litter_box_deodorize(self.serial)
+        await self.refresh()

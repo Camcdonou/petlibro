@@ -436,6 +436,34 @@ DEVICE_BUTTON_MAP: dict[type[Device], list[PetLibroButtonEntityDescription]] = {
             set_fn=lambda device: device.set_sound_off(),
             name="Turn Off Sound"
         ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="clean_now",
+            translation_key="clean_now",
+            set_fn=lambda device: device.set_clean_now(),
+            name="Clean Now (Experimental)",
+            entity_category=None
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="level_litter",
+            translation_key="level_litter",
+            set_fn=lambda device: device.set_level_litter(),
+            name="Level Litter (Experimental)",
+            entity_category=None
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="empty_all",
+            translation_key="empty_all",
+            set_fn=lambda device: device.set_empty_all(),
+            name="Empty All (Experimental)",
+            entity_category=None
+        ),
+        PetLibroButtonEntityDescription[LumaSmartLitterBox](
+            key="air_purify",
+            translation_key="air_purify",
+            set_fn=lambda device: device.set_air_purify(),
+            name="Air Purify (Experimental)",
+            entity_category=None
+        ),
     ],
 }
 

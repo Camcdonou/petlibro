@@ -1409,6 +1409,74 @@ class PetLibroAPI:
         return success
 
 
+    # Experimental Luma Smart Litter Box Controls
+    async def set_litter_box_clean(self, serial: str) -> JSON:
+        """Trigger cleaning cycle for litter box (EXPERIMENTAL)."""
+        _LOGGER.debug(f"Triggering litter box cleaning for device: {serial}")
+        try:
+            request_id = str(uuid.uuid4()).replace("-", "")
+            response = await self.session.post("/device/device/vacuum", json={
+                "deviceSn": serial,
+                "vacuumMode": "CLEAN",
+                "requestId": request_id,
+                "timeout": 10000
+            })
+            _LOGGER.debug(f"Litter box cleaning triggered: {response}")
+            return response
+        except Exception as e:
+            _LOGGER.error(f"Failed to trigger litter box cleaning for {serial}: {e}")
+            raise PetLibroAPIError(f"Error triggering cleaning: {e}")
+
+    async def set_litter_box_level(self, serial: str) -> JSON:
+        """Trigger litter leveling (EXPERIMENTAL)."""
+        _LOGGER.debug(f"Triggering litter leveling for device: {serial}")
+        try:
+            request_id = str(uuid.uuid4()).replace("-", "")
+            response = await self.session.post("/device/device/throwMode", json={
+                "deviceSn": serial,
+                "throwMode": "LEVEL",
+                "requestId": request_id,
+                "timeout": 10000
+            })
+            _LOGGER.debug(f"Litter leveling triggered: {response}")
+            return response
+        except Exception as e:
+            _LOGGER.error(f"Failed to trigger litter leveling for {serial}: {e}")
+            raise PetLibroAPIError(f"Error triggering leveling: {e}")
+
+    async def set_litter_box_empty_all(self, serial: str) -> JSON:
+        """Trigger empty all/full dump (EXPERIMENTAL)."""
+        _LOGGER.debug(f"Triggering empty all for device: {serial}")
+        try:
+            request_id = str(uuid.uuid4()).replace("-", "")
+            response = await self.session.post("/device/device/throwMode", json={
+                "deviceSn": serial,
+                "throwMode": "EMPTY_ALL",
+                "requestId": request_id,
+                "timeout": 10000
+            })
+            _LOGGER.debug(f"Empty all triggered: {response}")
+            return response
+        except Exception as e:
+            _LOGGER.error(f"Failed to trigger empty all for {serial}: {e}")
+            raise PetLibroAPIError(f"Error triggering empty all: {e}")
+
+    async def set_litter_box_deodorize(self, serial: str) -> JSON:
+        """Trigger air purification/deodorization (EXPERIMENTAL)."""
+        _LOGGER.debug(f"Triggering deodorization for device: {serial}")
+        try:
+            response = await self.session.post("/device/setting/updateDeodorizationSetting", json={
+                "deviceSn": serial,
+                "deodorizationModeSwitch": True,
+                "deodorizationStateOn": True
+            })
+            _LOGGER.debug(f"Deodorization triggered: {response}")
+            return response
+        except Exception as e:
+            _LOGGER.error(f"Failed to trigger deodorization for {serial}: {e}")
+            raise PetLibroAPIError(f"Error triggering deodorization: {e}")
+
+
 ## Added this to fix dupe logs
 class PetLibroDataCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, api):
