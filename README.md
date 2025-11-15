@@ -33,8 +33,11 @@
 ### Fountains
 * Dockstream Smart Fountain (PLWF105)
 * Dockstream RFID Smart Fountain (PLWF305)
-* Dockstream 2 Smart Fountain | Plug-In Model (PLWF106) 
+* Dockstream 2 Smart Fountain | Plug-In Model (PLWF106)
 * Dockstream 2 Smart Fountain | Cordless Model (PLWF116)
+
+### Litter Boxes
+* Luma Smart Litter Box (PLLB001)
 
 ### Pending Device(s)
 * N/A
