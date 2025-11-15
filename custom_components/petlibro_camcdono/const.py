@@ -7,7 +7,7 @@ from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, UnitOfMass, UnitOfVol
 type _Unit = Unit
 SENTINEL = object()
 
-DOMAIN = "petlibro"
+DOMAIN = "petlibro_camcdono"
 GITHUB = "https://github.com/jjjonesjr33/petlibro"
 
 # Configuration keys
